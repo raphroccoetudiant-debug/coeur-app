@@ -4,8 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>coeur.app</title>
+ 
+  <!-- PWA / icône écran d'accueil -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="coeur.app">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#fdf6f0">
+ 
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTUiIGZpbGw9IiNmZGY2ZjAiLz4KICA8dGV4dCB4PSIyNTYiIHk9IjM0MCIgZm9udC1zaXplPSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKdpO+4jzwvdGV4dD4KPC9zdmc+">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTUiIGZpbGw9IiNmZGY2ZjAiLz4KICA8dGV4dCB4PSIyNTYiIHk9IjM0MCIgZm9udC1zaXplPSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKdpO+4jzwvdGV4dD4KPC9zdmc+">
+ 
+  <script>
+    // Manifest PWA inline
+    const manifest = {
+      name: "coeur.app",
+      short_name: "coeur.app",
+      start_url: "/",
+      display: "standalone",
+      background_color: "#fdf6f0",
+      theme_color: "#fdf6f0",
+      icons: [{
+        src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTUiIGZpbGw9IiNmZGY2ZjAiLz4KICA8dGV4dCB4PSIyNTYiIHk9IjM0MCIgZm9udC1zaXplPSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKdpO+4jzwvdGV4dD4KPC9zdmc+",
+        sizes: "512x512",
+        type: "image/svg+xml"
+      }]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+    const manifestURL = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = manifestURL;
+    document.currentScript.after(link);
+  </script>
+ 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+ 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
  
@@ -22,118 +57,77 @@
     }
  
     .blob1 {
-      position: fixed;
-      top: -80px; right: -80px;
-      width: 260px; height: 260px;
-      border-radius: 50%;
+      position: fixed; top: -80px; right: -80px;
+      width: 260px; height: 260px; border-radius: 50%;
       background: radial-gradient(circle, #fce4ec 0%, transparent 70%);
       pointer-events: none;
     }
     .blob2 {
-      position: fixed;
-      bottom: -60px; left: -60px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
+      position: fixed; bottom: -60px; left: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
       background: radial-gradient(circle, #fce4ec 0%, transparent 70%);
       pointer-events: none;
     }
  
     /* PAGE ACCUEIL */
     #page-home {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 2rem;
-      width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 3rem 2rem; width: 100%;
       animation: fadeUp 0.5s ease both;
     }
  
     .app-name {
       font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      font-weight: 400;
-      font-style: italic;
-      color: #2d1a1a;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
+      font-size: 42px; font-weight: 400; font-style: italic;
+      color: #2d1a1a; letter-spacing: -0.02em; margin-bottom: 8px;
     }
     .app-name span { color: #e8667a; }
  
     .app-tagline {
-      font-size: 13px;
-      color: #b07080;
-      margin-bottom: 3.5rem;
-      font-weight: 300;
-      letter-spacing: 0.04em;
+      font-size: 13px; color: #b07080;
+      margin-bottom: 3.5rem; font-weight: 300; letter-spacing: 0.04em;
     }
  
     .home-label {
-      font-size: 13px;
-      color: #b07080;
-      margin-bottom: 16px;
-      font-style: italic;
-      font-family: 'Playfair Display', serif;
+      font-size: 13px; color: #b07080; margin-bottom: 16px;
+      font-style: italic; font-family: 'Playfair Display', serif;
     }
  
-    .home-cards {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-    }
+    .home-cards { display: flex; gap: 16px; justify-content: center; }
  
     .home-card {
-      width: 135px;
-      height: 160px;
-      border-radius: 20px;
-      border: 1.5px solid #f0d8de;
-      background: #fff;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+      width: 135px; height: 160px; border-radius: 20px;
+      border: 1.5px solid #f0d8de; background: #fff;
+      cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
       transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
       box-shadow: 0 2px 16px rgba(200,80,100,0.08);
     }
-    .home-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(200,80,100,0.18);
-      border-color: #e8667a;
-    }
+    .home-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(200,80,100,0.18); border-color: #e8667a; }
     .home-card:active { transform: scale(0.96); }
  
     .card-avatar {
-      width: 58px; height: 58px;
-      border-radius: 50%;
-      background: #fce4ec;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #fce4ec; display: flex;
+      align-items: center; justify-content: center; font-size: 28px;
     }
-    .card-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px; font-weight: 500; color: #2d1a1a;
-    }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 500; color: #2d1a1a; }
     .card-role { font-size: 11px; color: #c0788a; letter-spacing: 0.04em; }
  
     /* PAGE APP */
     #page-app {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2.5rem 1.5rem;
-      width: 100%;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2.5rem 1.5rem; width: 100%;
       animation: fadeUp 0.4s ease both;
     }
  
     .back-btn {
-      position: absolute;
-      top: 20px; left: 20px;
-      background: none; border: none;
-      cursor: pointer; font-size: 13px;
-      color: #c0788a; font-family: 'DM Sans', sans-serif;
+      position: absolute; top: 20px; left: 20px;
+      background: none; border: none; cursor: pointer;
+      font-size: 13px; color: #c0788a;
+      font-family: 'DM Sans', sans-serif;
       display: flex; align-items: center; gap: 5px;
       padding: 6px 0; transition: color 0.2s;
     }
@@ -141,8 +135,7 @@
  
     .conn-label {
       font-size: 11px; color: #c0a8b0;
-      display: flex; align-items: center;
-      margin-bottom: 1.5rem;
+      display: flex; align-items: center; margin-bottom: 1.5rem;
     }
     .conn-dot {
       width: 7px; height: 7px; border-radius: 50%;
