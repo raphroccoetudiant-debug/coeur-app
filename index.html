@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pour toi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: #fdf6f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fce4ec 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fce4ec 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 400;
+      font-style: italic;
+      color: #2d1a1a;
+      text-align: center;
+      margin-bottom: 2rem;
+      line-height: 1.4;
+      max-width: 280px;
+    }
+
+    .conn-label {
+      font-size: 11px;
+      color: #c0a8b0;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .conn-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #ccc;
+      display: inline-block;
+      margin-right: 5px;
+      transition: background 0.3s;
+    }
+    .conn-dot.ok { background: #7ec98a; }
+
+    .picker-label {
+      font-size: 12px;
+      color: #b07080;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .user-picker {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 2.5rem;
+      background: #e8d0d6;
+      border-radius: 50px;
+      padding: 5px;
+    }
+    .user-btn {
+      padding: 10px 24px;
+      border-radius: 50px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5a2a35;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+    .user-btn.active {
+      background: #e8667a;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(232,102,122,0.4);
+    }
+
+    #main {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.8rem;
+      width: 100%;
+      max-width: 360px;
+      animation: fadeUp 0.4s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .buttons-row {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .desire-btn {
+      flex: 1;
+      max-width: 150px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: none;
+      background: #fff;
+      box-shadow: 0 4px 30px rgba(200,80,100,0.18);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      position: relative;
+    }
+    .desire-btn:hover { transform: scale(1.05); box-shadow: 0 6px 36px rgba(200,80,100,0.28); }
+    .desire-btn:active { transform: scale(0.93); }
+    .desire-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .desire-btn .d-icon { font-size: 38px; line-height: 1; }
+    .desire-btn .d-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-style: italic;
+      color: #c0788a;
+    }
+    .desire-btn.sent .d-icon { animation: pop 0.35s ease; }
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.4); }
+      70%  { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid #e8667a;
+      width: 100%; height: 100%;
+      animation: rippleOut 0.7s ease-out both;
+      pointer-events: none;
+    }
+    @keyframes rippleOut {
+      from { transform: scale(1); opacity: 0.6; }
+      to   { transform: scale(1.8); opacity: 0; }
+    }
+
+    .status-text {
+      font-size: 13px;
+      color: #b07080;
+      text-align: center;
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+      min-height: 20px;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #f0d0d8, transparent);
+    }
+
+    .inbox-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #c0788a;
+      font-weight: 500;
+      align-self: flex-start;
+    }
+
+    .messages { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+
+    .msg {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 18px;
+      border: 1px solid #f5dde3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: fadeUp 0.3s ease both;
+    }
+    .msg-left { display: flex; align-items: center; gap: 12px; }
+    .msg-dot {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #fce4ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .msg-text { font-size: 14px; color: #2d1a1a; }
+    .msg-from { font-size: 11px; color: #c0788a; margin-top: 2px; }
+    .msg-time { font-size: 11px; color: #c0788a; white-space: nowrap; }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #c0a8b0;
+      font-size: 13px;
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="title">Envie de quelque chose ?<br>Fais le moi savoir ma belle</p>
+
+  <div class="conn-label">
+    <span class="conn-dot" id="dot"></span>
+    <span id="conn-text">Connexion...</span>
+  </div>
+
+  <p class="picker-label">Je suis...</p>
+  <div class="user-picker">
+    <button class="user-btn" id="btn-mathilde" onclick="setUser('mathilde')">Mathilde</button>
+    <button class="user-btn" id="btn-raph" onclick="setUser('raph')">Raph</button>
+  </div>
+
+  <div id="main">
+    <div id="sender-view" style="display:none; flex-direction:column; align-items:center; gap:1.5rem; width:100%;">
+      <div class="buttons-row">
+        <button class="desire-btn" id="btn-cuni" onclick="send('cuni')">
+          <span class="d-icon">🌸</span>
+          <span class="d-label">cuni</span>
+        </button>
+        <button class="desire-btn" id="btn-ken" onclick="send('ken')">
+          <span class="d-icon">🔥</span>
+          <span class="d-label">ken</span>
+        </button>
+      </div>
+      <p class="status-text" id="status">Appuie pour lui faire savoir</p>
+    </div>
+
+    <div id="receiver-view" style="display:none; flex-direction:column; align-items:center; gap:1.5rem; width:100%;">
+      <p class="status-text">Voici ce que Mathilde veut...</p>
+      <div class="divider"></div>
+      <p class="inbox-label">Messages reçus</p>
+      <div class="messages" id="messages"></div>
+      <div class="empty-state" id="empty">Rien pour l'instant...<br>Mathilde n'a encore rien envoyé</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://kkdtbtlxkcseyybmarnz.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_w6WyUV_2gBZMJFdodXcVug_LoW_oFJr';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const DESIRES = {
+      cuni: { text: 'Je veux un cuni', icon: '🌸' },
+      ken:  { text: 'Je veux ken',     icon: '🔥' }
+    };
+
+    let me = null;
+    let channel = null;
+
+    async function init() {
+      const { error } = await sb.from('messages').select('id').limit(1);
+      const dot = document.getElementById('dot');
+      const connText = document.getElementById('conn-text');
+      if (error) {
+        dot.style.background = '#e8667a';
+        connText.textContent = 'Erreur de connexion';
+      } else {
+        dot.classList.add('ok');
+        connText.textContent = 'Connecté';
+      }
+    }
+
+    function setUser(u) {
+      me = u;
+      document.getElementById('btn-mathilde').classList.toggle('active', u === 'mathilde');
+      document.getElementById('btn-raph').classList.toggle('active', u === 'raph');
+      const main = document.getElementById('main');
+      main.style.display = 'flex';
+      main.style.flexDirection = 'column';
+      main.style.alignItems = 'center';
+      main.style.width = '100%';
+      main.style.maxWidth = '360px';
+      main.style.gap = '1.8rem';
+      document.getElementById('sender-view').style.display = u === 'mathilde' ? 'flex' : 'none';
+      document.getElementById('receiver-view').style.display = u === 'raph' ? 'flex' : 'none';
+
+      if (u === 'raph') {
+        loadMessages();
+        subscribeRealtime();
+      } else {
+        if (channel) { sb.removeChannel(channel); channel = null; }
+      }
+    }
+
+    async function send(type) {
+      document.getElementById('btn-cuni').disabled = true;
+      document.getElementById('btn-ken').disabled = true;
+
+      const { error } = await sb.from('messages').insert({ type });
+
+      document.getElementById('btn-cuni').disabled = false;
+      document.getElementById('btn-ken').disabled = false;
+
+      if (error) {
+        document.getElementById('status').textContent = 'Erreur, réessaie...';
+        setTimeout(() => { document.getElementById('status').textContent = 'Appuie pour lui faire savoir'; }, 2000);
+        return;
+      }
+
+      const btn = document.getElementById('btn-' + type);
+      btn.classList.add('sent');
+      setTimeout(() => btn.classList.remove('sent'), 400);
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      btn.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+
+      document.getElementById('status').textContent = 'Envoyé avec désir ✨';
+      setTimeout(() => { document.getElementById('status').textContent = 'Appuie pour lui faire savoir'; }, 2000);
+    }
+
+    async function loadMessages() {
+      const { data, error } = await sb
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (!error && data) renderMessages(data);
+    }
+
+    function subscribeRealtime() {
+      if (channel) sb.removeChannel(channel);
+      channel = sb.channel('messages-channel')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
+          loadMessages();
+        })
+        .subscribe();
+    }
+
+    function renderMessages(data) {
+      if (me !== 'raph') return;
+      const container = document.getElementById('messages');
+      const empty = document.getElementById('empty');
+      if (!data || data.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      container.innerHTML = data.map(m => {
+        const d = DESIRES[m.type] || { text: m.type, icon: '💬' };
+        const t = new Date(m.created_at);
+        const time = t.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        return `<div class="msg">
+          <div class="msg-left">
+            <div class="msg-dot">${d.icon}</div>
+            <div>
+              <div class="msg-text">${d.text}</div>
+              <div class="msg-from">De Mathilde</div>
+            </div>
+          </div>
+          <div class="msg-time">${time}</div>
+        </div>`;
+      }).join('');
+    }
+
+    init();
+  </script>
+</body>
+</html>
